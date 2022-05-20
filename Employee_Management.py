@@ -31,49 +31,77 @@ class Work(Employee):
         super().__init__(name, age, sex, phone_number, zip, employee_contractor)
         self.days_worked = 0
         self.sick_leaves = 0
-        self.hours = {}
-    
-    def add_days_worked(self, name):
+        self.hours = 0
+
+    def add_days_worked(self):
         self.days_worked += 1
+    
+    def print_days_worked(self, name):
         print(str(self.name) + "has worked " + str(self.days_worked) + " days")
 
-    def add_sick_leaves(self, name):
+    def add_sick_leaves(self):
         self.sick_leaves += 1
+    
+    def print_sick_leaves(self, name):
         print(str(self.name) + "has " + str(self.sick_leaves) + " sick days")
 
-    def time_worked(self, name):
-        pass
+    def add_time_worked(self, hours):
+        self.hour += hours
+
+    def print_time_worked(self, name):
+        print(str(name) + " has worked " + str(self.hours) + " hours")
 
 
-class Salary(Work):
+class Pay(Work):
 
     def __init__(self, name, age, sex, phone_number, zip, employee_contractor):
         super().__init__(name, age, sex, phone_number, zip, employee_contractor)
         self.salary = 0
+        self.rate = 0
+        self.final_pay = 0
 
     def print_salary(self):
-            print("Salary : ", self.salary)
+        print("Salary : ", self.salary)
     
-    def starting_salary(self, amount):
+    def set_starting_salary(self, amount):
         self.salary = amount
 
-    def rate_per_hour(self):
-        pass
+    def print_rate(self):
+        print("Hourly rate : ", self.rate)
+ 
+    def set_rate_per_hour(self, rate):
+        self.rate = rate
+
+    def final_pay(self, employee_contractor):
+        final_pay = 0
+        if (str(self.employee_contractor) == "employee"):
+            print("Final Pay : " + str(self.salary))
+        elif (str(self.employee_contractor == "contractor")):
+            print("Final Pay : " + str(int(self.time_worked) * int(self.rate)))
 
     def salary_raise(self, name, percent_raise):
-        self.percent_raise = percent_raise
-        print(str(self.name) + "'s salary has been raise by " + str(self.percent_raise) + \
-            "% from $" + str(self.salary) + " to $" + str(self.salary + (self.salary * self.percent_raise)))
-        self.salary = self.salary + (self.salary * self.percent_raise)
+        print(str(self.name) + "'s salary has been raise by " + str(percent_raise) + \
+            "% from $" + str(self.salary) + " to $" + str(self.salary + (self.salary * percent_raise)))
+        self.salary += int(percent_raise) * int(self.salary)
         
     def salary_cut(self, name, percent_cut):
-        self.percent_cut = percent_cut
-        print(str(self.name) + "'s salary has been cut by " + str(self.percent_cut) + \
-            "% from $" + str(self.salary) + " to $" + str(self.salary - (self.salary * self.percent_cut)))
-        self.salary = self.salary - (self.salary * self.percent_cut)
+        print(str(self.name) + "'s salary has been cut by " + str(percent_cut) + \
+            "% from $" + str(self.salary) + " to $" + str(self.salary - (self.salary * percent_cut)))
+        self.salary -= int(percent_cut) * int(self.salary) 
     
+    def rate_raise(self, name, amount_raise):
+        print(str(self.name) + "'s hourly rate has been raise by " + str(amount_raise) + \
+            "% from $" + str(self.rate) + " to $" + str(self.salary + amount_raise))
+        self.salary += int(amount_raise) 
 
-names = {}
+    def rate_cut(self, name, amount_cut):
+        print(str(self.name) + "'s hourly rate has been cut by " + str(amount_cut) + \
+            "% from $" + str(self.rate) + " to $" + str(self.salary + amount_cut))
+        self.salary -= int(amount_cut) 
+
+
+dict = {}
+names = []
 name = ""
 age = 0
 sex = 'm'
@@ -92,10 +120,10 @@ def add_employee():
                 quit()
             elif (type(name) != str):
                 print("Please inut a valid name")
-            elif name in names:
+            elif name in dict:
                 print("This name is already registered")
             else:
-                names[name] = True
+                names.append(name)
                 break
 
         while True:
@@ -150,23 +178,44 @@ def add_employee():
             else:
                 print("Please input a valid job status")
 
-        names[name] = [name, age, sex, phone_number, zip, employee_contractor]
+        dict[name] = [name, age, sex, phone_number, zip, employee_contractor]
         again = input("Add another employee? (y/n) ")
         if (str(again).lower() == 'n'):
             break
 
 
 def remove_employee():
-    pass
+    while True:
+        emp_name = input("Which employee would you like to remove? \n" + \
+            str(names) + "\n: ")
+        if (str(emp_name).lower() == 'q'):
+            quit()
+        elif (emp_name not in names):
+            print("This is not a valid employee name")
+        else:
+            validate = input("Are you sure? (y/n) ")
+            if (str(validate).lower() == 'y'):
+                del dict[emp_name]
+                names.remove(str(emp_name))
+                print(str(emp_name) + " has been removed")
+                break
 
-add_employee()
-emp_name = input("\nWhich employee would you like to know about? \n" + str(names) + "\n: ")
+
+
+
+while True:
+    emp_name = input("\nWhich employee would you like to know about? \n" + str(names) + "\n: ")
+    if (str(emp_name).lower() == 'q'):
+        quit()
+    elif (emp_name not in names):
+        print("This is not a valid employee name")
+    else:
+        break
+
 which_info = input("What would you like to know about " + str(emp_name) + "?" + \
     "\nGeneral Info \nPrivate Info \nTime Worked \nStarting Salary \nPay rate" + \
         "\n: "
     )
-
-
 
 
 
