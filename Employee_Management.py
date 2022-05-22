@@ -28,7 +28,7 @@ class Employee:
         self.employee_contractor = employee_contractor
 
     def print_general_info(self):
-        print("General Info : ")
+        print("\nGeneral Info : ")
         print("Name : ", self.name)
         print("Age : ", self.age)
         print("Sex : ", self.sex)
@@ -38,7 +38,7 @@ class Employee:
             print("Job Title : contractor")
     
     def print_personal_info(self):
-        print("Personal Info: ")
+        print("\nPersonal Info: ")
         print("Phone Number : ", self.phone_number)
         print("Zip : ", self.zip)
 
@@ -55,13 +55,13 @@ class Work(Employee):
         self.days_worked += days
     
     def print_days_worked(self):
-        print(str(self.name) + "has worked " + str(self.days_worked) + " days")
+        print(str(self.name) + " has worked " + str(self.days_worked) + " days")
 
     def add_sick_leaves(self, days):
         self.sick_leaves += days
     
     def print_sick_leaves(self):
-        print(str(self.name) + "has " + str(self.sick_leaves) + " sick days")
+        print(str(self.name) + " has " + str(self.sick_leaves) + " sick days")
 
     def add_time_worked(self, hours):
         self.hour += hours
@@ -79,23 +79,22 @@ class Pay(Work):
         self.final_pay = 0
 
     def print_salary(self):
-        print("Salary : $", self.salary)
+        print("Salary : $" + str(self.salary))
     
     def set_salary(self, amount):
         self.salary = amount
 
     def print_rate(self):
-        print("Hourly rate : $", self.rate)
+        print("Hourly rate : $" + str(self.rate))
  
     def set_rate_per_hour(self, rate):
         self.rate = rate
 
-    def final_pay(self):
-        final_pay = 0
-        if (str(self.employee_contractor) == "employee"):
+    def print_final_pay(self):
+        if (str(self.employee_contractor).lower() == "employee"):
             print("Final Pay : $" + str(self.salary))
-        elif (str(self.employee_contractor == "contractor")):
-            print("Final Pay : $" + str(int(self.time_worked) * int(self.rate)))
+        elif (str(self.employee_contractor).lower() == "contractor"):
+            print("Final Pay : $" + str(self.hours * self.rate))
 
     def salary_raise(self, percent_raise):
         print(str(self.name) + "'s salary has been raise by " + str(percent_raise) + \
@@ -132,7 +131,7 @@ def add_employee():
             if (str(name).lower() == 'q'):
                 print("Quitting Program")
                 quit()
-            elif (type(name) != str):
+            elif (not name.isalpha()):
                 print("Please inut a valid name")
             elif name in dict:
                 print("This name is already registered")
@@ -186,8 +185,8 @@ def add_employee():
             if (str(employee_contractor).lower() == 'q'):
                 print("Quitting Program")
                 quit()
-            elif (str(employee_contractor).lower == "employee" or \
-                str(employee_contractor == "contractor")):
+            elif (str(employee_contractor).lower() == "employee" or \
+                str(employee_contractor).lower() == "contractor"):
                 break
             else:
                 print("Please input a valid job status")
@@ -203,6 +202,7 @@ def remove_employee():
         emp_name = input("Which employee would you like to remove? \n" + \
             str(names) + "\n: ")
         if (str(emp_name).lower() == 'q'):
+            print("Quitting Program")
             quit()
         elif (emp_name not in names):
             print("This is not a valid employee name")
@@ -218,48 +218,42 @@ def remove_employee():
 def get_info(emp_name):
     name, age, sex, phone_number, zip, employee_contractor = dict[emp_name]
     user = Pay(name, age, sex, phone_number, zip, employee_contractor)
-
-    if (str(employee_contractor).lower() == "employee"):
-        which_info = input("What would you like to know about " + str(emp_name) + "?" + \
-        "\nGeneral Info (a) \nPrivate Info (b) \nNumber of Days Worked (c) \nNumber of Sick Days (d) \
-            \nHours Worked (e) \nFinal Pay Amount (f) \nSalary (g) \n: "
-        )
-    else:
-        which_info = input("What would you like to know about " + str(emp_name) + "?" + \
-        "\nGeneral Info (a) \nPrivate Info (b) \nNumber of Days Worked (c) \nNumber of Sick Days (d) \
-            \nHours Worked (e) \nFinal Pay Amount (f) Rate per Hour (g) \n: "
-        )
     
     while True:
+        if (str(employee_contractor).lower() == "employee"):
+            which_info = input("\nWhat would you like to know about " + str(emp_name) + "?" + \
+            "\nGeneral Info (a) \nPrivate Info (b) \nNumber of Days Worked (c) \nNumber of Sick Days (d) \
+                \nHours Worked (e) \nFinal Pay Amount (f) \nSalary (g) \nBack (Back) \nQuit (Q) \n: "
+            )
+        else:
+            which_info = input("\nWhat would you like to know about " + str(emp_name) + "?" + \
+            "\nGeneral Info (a) \nPrivate Info (b) \nNumber of Days Worked (c) \nNumber of Sick Days (d) \
+                \nHours Worked (e) \nFinal Pay Amount (f) \nRate per Hour (g) \nBack (Back) \nQuit (Q) \n: "
+            )
         if (str(which_info).lower() == 'q'):
+            print("Quitting Program")
             quit()
+        elif (str(which_info).lower() == "back"):
+            break
         elif (str(which_info).lower() not in "abcdefg"):
             print("Please input a valid option")
         elif (str(which_info).lower() == 'a'):
             user.print_general_info()
-            break
         elif (str(which_info).lower() == 'b'):
             user.print_personal_info()
-            break
         elif (str(which_info).lower() == 'c'):
             user.print_days_worked()
-            break
         elif (str(which_info).lower() == 'd'):
             user.print_sick_leaves()
-            break
         elif (str(which_info).lower() == 'e'):
             user.print_time_worked()
-            break
         elif (str(which_info).lower() == 'f'):
-            user.final_pay(employee_contractor)
-            break
+            user.print_final_pay()
         elif (str(which_info).lower() == 'g' and \
             str(employee_contractor).lower() == "employee"):
             user.print_salary()
-            break
         else:
             user.print_rate()
-            break
 
 
 def edit_info(emp_name):
@@ -267,23 +261,26 @@ def edit_info(emp_name):
     user = Pay(name, age, sex, phone_number, zip, employee_contractor)
 
     if (str(employee_contractor).lower() == "employee"):
-        which_info = input("What would you like to edit about " + str(emp_name) + "? \
+        which_info = input("\nWhat would you like to edit about " + str(emp_name) + "? \
             \nEdit Name (a) \nEdit Age (b) \nEdit Phone Number (c) \nEdit Zip Code (d) \
                 \nEdit Job Title (e) \nEdit Days Worked (f) \nEdit Sick-Leave Days (g) \
                 \nEdit Hour Worked (h) \nEdit Salary (i) \nGive Salary Raise (j) \
-                \nGive Salary Cut (k) \n: "
+                \nGive Salary Cut (k) \nBack (Back) \nQuit (Q): "
         )
     else:
-        which_info = input("What would you like to edit about " + str(emp_name) + "?  \
+        which_info = input("\nWhat would you like to edit about " + str(emp_name) + "?  \
             \nEdit Name (a) \nEdit Age (b) \nEdit Phone Number (c) \nEdit Zip Code (d) \
                 \nEdit Job Title (e) \nEdit Days Worked (f) \nEdit Sick-Leave Days (g) \
                 \nEdit Hour Worked (h) \nEdit Rate per Hour (i) \nGive Rate Raise (j) \
-                \nGive Rate Cut (k) \n: "
+                \nGive Rate Cut (k) \nBack (Back) \nQuit (Q): "
         )
 
     while True:
         if (str(which_info).lower() == 'q'):
+            print("Quitting Program")
             quit()
+        elif (str(which_info).lower() == "back"):
+            break
         elif (str(which_info).lower() not in "abcdefghijk"):
             print("Please input a valid option")
         elif(str(which_info).lower() == 'a'):
@@ -292,8 +289,9 @@ def edit_info(emp_name):
                 if (type(new_name) != str):
                     print("Please input a valid name")
                 elif (str(new_name).lower() == 'q'):
+                    print("Quitting Program")
                     quit()
-                elif name in dict:
+                elif new_name in dict:
                     print("This name is already registered")
                 else:
                     dict[new_name] = dict[user.get_name()]
@@ -308,6 +306,7 @@ def edit_info(emp_name):
             while True:
                 new_age = input(str(user.get_name()) + "'s new age: ")
                 if (str(new_age).lower() == 'q'):
+                    print("Quitting Program")
                     quit()
                 elif (not new_age.isdigit()):
                     print("Please input a valid age")
@@ -319,6 +318,7 @@ def edit_info(emp_name):
             while True:
                 new_phone_number = input(str(user.get_name()) + "'s new phone number: ")
                 if (str(new_phone_number).lower() == 'q'):
+                    print("Quitting Program")
                     quit()
                 elif (not new_phone_number.isdigit()):
                     print("Please input a valid phone number")
@@ -330,6 +330,7 @@ def edit_info(emp_name):
             while True:
                 new_zip = input(str(user.get_name()) + "'s new zip code: ")
                 if (str(new_zip).lower() == 'q'):
+                    print("Quitting Program")
                     quit()
                 elif (not new_zip.isdigit()):
                     print("Please input a valid zip code")
@@ -341,6 +342,7 @@ def edit_info(emp_name):
             while True:
                 new_job_title = input(str(user.get_name()) + "'s new job title: ")
                 if (str(new_job_title).lower() == 'q'):
+                    print("Quitting Program")
                     quit()
                 elif (str(new_job_title).lower() != "employee" and \
                     str(new_job_title).lower() != "contractor"):
@@ -353,6 +355,7 @@ def edit_info(emp_name):
             while True:
                 new_days_worked = input("Add number of work-days for " + str(user.get_name()) + ": ")
                 if (str(new_days_worked).lower() == 'q'):
+                    print("Quitting Program")
                     quit()
                 elif (not new_days_worked.isdigit()):
                     print("Please input a valid number")
@@ -363,6 +366,7 @@ def edit_info(emp_name):
             while True:
                 new_sick_days = inputs("Add number of sick-leave days for " + str(user.get_name()) + ": ")
                 if (str(new_days_worked).lower() == 'q'):
+                    print("Quitting Program")
                     quit()
                 elif (not new_days_worked.isdigit()):
                     print("Please input a valid number")
@@ -373,6 +377,7 @@ def edit_info(emp_name):
             while True:
                 new_time_worked = inputs("Add number of hours worked for " + str(user.get_name()) + ": ")
                 if (str(new_time_worked).lower() == 'q'):
+                    print("Quitting Program")
                     quit()
                 elif (not new_time_worked.isfloat()):
                     print("Please input a valid number")
@@ -384,6 +389,7 @@ def edit_info(emp_name):
                 if (str(user.employee_contractor).lower() == "employee"):
                     new_salary = input("Set " + str(user.get_name()) + "'s salary: ")
                     if (str(new_salary).lower() == 'q'):
+                        print("Quitting Program")
                         quit()
                     elif (not new_salary.isfloat()):
                         print("Please input a valid number")
@@ -393,6 +399,7 @@ def edit_info(emp_name):
                 else:
                     new_rate = input("Set " + str(user.get_name()) + "'s rate per hour: ")
                     if (str(new_rate).lower() == 'q'):
+                        print("Quitting Program")
                         quit()
                     elif (not new_rate.isfloat()):
                         print("Please input a valid number")
@@ -404,6 +411,7 @@ def edit_info(emp_name):
                 if (str(user.employee_contractor).lower() == "employee"):
                     salary_raise = input("Give " + str(user.get_name()) + " a salary raise by %: ")
                     if (str(salary_raise).lower() == 'q'):
+                        print("Quitting Program")
                         quit()
                     elif (not salary_raise.isfloat()):
                         print("Please input a valid number")
@@ -413,6 +421,7 @@ def edit_info(emp_name):
                 else:
                     rate_raise = input("Give " + str(user.get_name()) + " a rate raise by $: ")
                     if (str(rate_raise).lower() == 'q'):
+                        print("Quitting Program")
                         quit()
                     elif (not new_rate.isfloat()):
                         print("Please input a valid number")
@@ -425,6 +434,7 @@ def edit_info(emp_name):
                 if (str(user.employee_contractor).lower() == "employee"):
                     salary_cut = input("Give " + str(user.get_name()) + " a salary cut by %: ")
                     if (str(salary_cut).lower() == 'q'):
+                        print("Quitting Program")
                         quit()
                     elif (not salary_cut.isfloat()):
                         print("Please input a valid number")
@@ -434,6 +444,7 @@ def edit_info(emp_name):
                 else:
                     rate_cut = input("Give " + str(user.get_name()) + " a rate cut by $: ")
                     if (str(rate_cut).lower() == 'q'):
+                        print("Quitting Program")
                         quit()
                     elif (not rate_cut.isfloat()):
                         print("Please input a valid number")
@@ -443,29 +454,43 @@ def edit_info(emp_name):
 
 
 while True:
-    print("\nWhat would you like to do? ")
+    print("\nWhat would you like to do?")
     user = input("Get Info About Employee (Get) \nEdit Info About Employee (Edit) \
-        \nAdd Employee (Add) \nRemove Employee (Remove) \n: ")
+        \nAdd Employee (Add) \nRemove Employee (Remove) \nBack (Back) \nQuit (Q) \n: ")
     if (str(user).lower() == 'q'):
         quit()
+    elif (str(user).lower() == "back"):
+        quit()
     elif (str(user).lower() == "get"):
-        while True:
-            emp_name = input("\nWhich employee would you like to get information about? \n" + str(names) + "\n: ")
-            if (str(emp_name).lower() == 'q'):
-                quit()
-            elif (emp_name not in names):
-                print("This is not a valid employee name")
-            else:
-                get_info(emp_name)
+        if (names == []):
+            print("There are no employees to get")
+        else: 
+            while True:
+                emp_name = input("\nWhich employee would you like to get information about? \n" + str(names) + \
+                    "\nBack (Back) \nQuit (Q) \n: ")
+                if (str(emp_name).lower() == 'q'):
+                    quit()
+                elif (str(emp_name).lower() == "back"):
+                    break 
+                elif (emp_name not in names):
+                    print("This is not a valid employee name")
+                else:
+                    get_info(emp_name)
     elif (str(user).lower() == "edit"):
-        while True:
-            emp_name = input("\nWhose information would you like to edit? \n" + str(names) + "\n: ")
-            if (str(emp_name).lower() == 'q'):
-                quit()
-            elif (emp_name not in names):
-                print("This is not a valid employee name")
-            else:
-                edit_info(emp_name)
+        if (names == []):
+            print("There are no employees to edit")
+        else:
+            while True:
+                emp_name = input("\nWhose information would you like to edit? \n" + str(names) + \
+                    "\nBack (Back) \nQuit (Q) \n: ")
+                if (str(emp_name).lower() == 'q'):
+                    quit()
+                elif (str(emp_name).lower() == "back"):
+                    break
+                elif (emp_name not in names):
+                    print("This is not a valid employee name")
+                else:
+                    edit_info(emp_name)
     elif (str(user).lower() == "add"):
         add_employee()
     elif (str(user).lower() == "remove"):
