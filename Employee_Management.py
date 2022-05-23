@@ -15,11 +15,20 @@ class Employee:
     def set_name(self, names):
         self.name = names
 
+    def get_age(self):
+        return self.age
+
     def set_age(self, age):
         self.age = age
 
+    def get_phone_number(self):
+        return self.phone_number
+
     def set_phone_number(self, phone_number):
         self.phone_number = phone_number
+
+    def get_zip(self):
+        return self.zip
 
     def set_zip(self, zip):
         self.zip = zip
@@ -48,26 +57,35 @@ class Employee:
 
 class Work(Employee): 
 
-    def __init__(self, name, age, sex, phone_number, zip, employee_contractor):
+    def __init__(self, name, age, sex, phone_number, zip, employee_contractor, days, leaves, hours):
         super().__init__(name, age, sex, phone_number, zip, employee_contractor)
-        self.days_worked = 0
-        self.sick_leaves = 0
-        self.hours = 0
+        self.days_worked = days
+        self.sick_leaves = leaves
+        self.hours = hours
 
     def add_days_worked(self, days):
-        self.days_worked += int(days)
+        self.days_worked = int(self.days_worked) + int(days)
+
+    def get_days_worked(self):
+        return self.days_worked
     
     def print_days_worked(self):
         print(str(self.name) + " has worked " + str(self.days_worked) + " days")
 
     def add_sick_leaves(self, days):
-        self.sick_leaves += int(days)
+        self.sick_leaves = int(self.sick_leaves) + int(days)
+
+    def get_sick_leaves(self):
+        return self.sick_leaves
     
     def print_sick_leaves(self):
         print(str(self.name) + " has " + str(self.sick_leaves) + " sick days")
 
     def add_time_worked(self, hour):
-        self.hours += hour
+        self.hours = float(self.hours) + float(hour)
+
+    def get_hours(self):
+        return self.hours
 
     def print_time_worked(self):
         print(str(self.name) + " has worked " + str(self.hours) + " hours")
@@ -75,11 +93,10 @@ class Work(Employee):
 
 class Pay(Work):
 
-    def __init__(self, name, age, sex, phone_number, zip, employee_contractor):
-        super().__init__(name, age, sex, phone_number, zip, employee_contractor)
-        self.salary = 0
-        self.rate = 0
-        self.final_pay = 0
+    def __init__(self, name, age, sex, phone_number, zip, employee_contractor, days, leaves, hours, salary, rate):
+        super().__init__(name, age, sex, phone_number, zip, employee_contractor, days, leaves, hours)
+        self.salary = salary
+        self.rate = rate
 
     def print_salary(self):
         print("Salary : $" + str(self.salary))
@@ -87,37 +104,43 @@ class Pay(Work):
     def set_salary(self, amount):
         self.salary = amount
 
+    def get_salary(self):
+        return self.salary
+
     def print_rate(self):
         print("Hourly rate : $" + str(self.rate))
  
     def set_rate_per_hour(self, rate):
         self.rate = rate
 
+    def get_rate(self):
+        return self.rate
+
     def print_final_pay(self):
         if (str(self.employee_contractor).lower() == "employee"):
             print("Final Pay : $" + str(self.salary))
         elif (str(self.employee_contractor).lower() == "contractor"):
-            print("Final Pay : $" + str(self.hours * self.rate))
+            print("Final Pay : $" + str(float(self.hours) * float(self.rate)))
 
     def salary_raise(self, percent_raise):
         print(str(self.name) + "'s salary has been raise by " + str(percent_raise) + \
-            "% from $" + str(self.salary) + " to $" + str(self.salary + (self.salary * percent_raise)))
-        self.salary += percent_raise * int(self.salary)
+            "% from $" + str(self.salary) + " to $" + str(int(self.salary) + (float(self.salary) * percent_raise * 0.01)))
+        self.salary = float(self.salary) + (percent_raise * 0.01 * float(self.salary))
         
     def salary_cut(self, percent_cut):
         print(str(self.name) + "'s salary has been cut by " + str(percent_cut) + \
-            "% from $" + str(self.salary) + " to $" + str(self.salary - (self.salary * percent_cut)))
-        self.salary -= percent_cut * int(self.salary) 
+            "% from $" + str(self.salary) + " to $" + str(float(self.salary) - (float(self.salary) * percent_cut * 0.01)))
+        self.salary = float(self.salary) - (percent_cut * 0.01 * float(self.salary))
     
     def rate_raise(self, amount_raise):
         print(str(self.name) + "'s hourly rate has been raise by $" + str(amount_raise) + \
-            ", from $" + str(self.rate) + " to $" + str(self.salary + amount_raise))
-        self.rate += int(amount_raise) 
+            ", from $" + str(self.rate) + " to $" + str(self.rate + amount_raise))
+        self.rate = float(self.rate) + amount_raise 
 
     def rate_cut(self, amount_cut):
         print(str(self.name) + "'s hourly rate has been cut by $" + str(amount_cut) + \
-            ", from $" + str(self.rate) + " to $" + str(self.salary - amount_cut))
-        self.rate -= int(amount_cut) 
+            ", from $" + str(self.rate) + " to $" + str(self.rate - amount_cut))
+        self.rate =  float(self.rate) - amount_cut 
 
 
 dict, names = {}, []
@@ -194,7 +217,7 @@ def add_employee():
             else:
                 print("Please input a valid job status")
 
-        dict[name] = [name, age, sex, phone_number, zip, employee_contractor]
+        dict[name] = [name, age, sex, phone_number, zip, employee_contractor, 0, 0, 0, 0, 0]
         break_var = False
         while True:
             again = input("Add another employee? (y/n) ")
@@ -230,12 +253,16 @@ def remove_employee():
                 break
 
 def is_number(input):
-    return float(input) or int(input)
+    try:
+        float(input) or int(input)
+        return True
+    except:
+        return False
 
 
 def get_info(emp_name):
-    name, age, sex, phone_number, zip, employee_contractor = dict[emp_name]
-    user = Pay(name, age, sex, phone_number, zip, employee_contractor)
+    name, age, sex, phone_number, zip, employee_contractor, days, leaves, hours, salary, rate = dict[emp_name]
+    user = Pay(name, age, sex, phone_number, zip, employee_contractor, days, leaves, hours, salary, rate)
     
     while True:
         if (str(employee_contractor).lower() == "employee"):
@@ -275,8 +302,8 @@ def get_info(emp_name):
 
 
 def edit_info(emp_name):
-    name, age, sex, phone_number, zip, employee_contractor = dict[emp_name]
-    user = Pay(name, age, sex, phone_number, zip, employee_contractor)
+    name, age, sex, phone_number, zip, employee_contractor, days, leaves, hours, salary, rate = dict[emp_name]
+    user = Pay(name, age, sex, phone_number, zip, employee_contractor, days, leaves, hours, salary, rate)
 
     while True:
         if (str(user.get_employee_contractor()).lower() == "employee"):
@@ -324,7 +351,8 @@ def edit_info(emp_name):
                     break
         elif (str(which_info).lower() == 'b'):
             while True:
-                new_age = input(str(user.get_name()) + "'s new age: ")
+                new_age = input(str(user.get_name()) + "'s new age (currently : " + \
+                    str(user.get_age()) + "): ")
                 if (str(new_age).lower() == 'q'):
                     print("Quitting Program")
                     quit()
@@ -336,7 +364,8 @@ def edit_info(emp_name):
                     break
         elif(str(which_info).lower() == 'c'):
             while True:
-                new_phone_number = input(str(user.get_name()) + "'s new phone number: ")
+                new_phone_number = input(str(user.get_name()) + \
+                    "'s new phone number (currently : " + str(user.get_phone_number()) + "): ")
                 if (str(new_phone_number).lower() == 'q'):
                     print("Quitting Program")
                     quit()
@@ -348,7 +377,8 @@ def edit_info(emp_name):
                     break
         elif (str(which_info).lower() == 'd'):
             while True:
-                new_zip = input(str(user.get_name()) + "'s new zip code: ")
+                new_zip = input(str(user.get_name()) + "'s new zip code: (currently : " + \
+                    str(user.get_zip()) + "): ")
                 if (str(new_zip).lower() == 'q'):
                     print("Quitting Program")
                     quit()
@@ -360,7 +390,8 @@ def edit_info(emp_name):
                     break
         elif (str(which_info).lower() == 'e'):
             while True:
-                new_job_title = input(str(user.get_name()) + "'s new job title (employee/contractor): ")
+                new_job_title = input(str(user.get_name()) + "'s new job title (employee/contractor): (currently : " + \
+                    str(user.get_employee_contractor()) + "): ")
                 if (str(new_job_title).lower() == 'q'):
                     print("Quitting Program")
                     quit()
@@ -369,11 +400,12 @@ def edit_info(emp_name):
                     print("Please input a valid job title")
                 else:
                     user.set_employee_contractor(new_job_title)
-                    dict[user.get_name()][-1] = new_job_title
+                    dict[user.get_name()][5] = new_job_title
                     break
         elif (str(which_info).lower() == 'f'):
             while True:
-                new_days_worked = input("Add number of work-days for " + str(user.get_name()) + ": ")
+                new_days_worked = input("Add number of work-days for " + str(user.get_name()) + \
+                    " (currently : " + str(user.get_days_worked()) + "): ")
                 if (str(new_days_worked).lower() == 'q'):
                     print("Quitting Program")
                     quit()
@@ -381,10 +413,12 @@ def edit_info(emp_name):
                     print("Please input a valid number")
                 else:
                     user.add_days_worked(new_days_worked)
+                    dict[user.get_name()][6] = new_days_worked
                     break
         elif (str(which_info).lower() == 'g'):
             while True:
-                new_sick_days = input("Add number of sick-leave days for " + str(user.get_name()) + ": ")
+                new_sick_days = input("Add number of sick-leave days for " + str(user.get_name()) + \
+                    " currently : " + str(user.get_sick_leaves()) + "): ")
                 if (str(new_sick_days).lower() == 'q'):
                     print("Quitting Program")
                     quit()
@@ -392,57 +426,58 @@ def edit_info(emp_name):
                     print("Please input a valid number")
                 else:
                     user.add_sick_leaves(new_sick_days)
+                    dict[user.get_name()][7] = new_sick_days
                     break
         elif (str(which_info).lower() == 'h'):
             while True:
-                new_time_worked = input("Add number of hours worked for " + str(user.get_name()) + ": ")
+                new_time_worked = input("Add number of hours worked for " + str(user.get_name()) + \
+                    " currently : " + str(user.get_hours()) + "): ")
                 if (str(new_time_worked).lower() == 'q'):
                     print("Quitting Program")
                     quit()
                 elif (not is_number(new_time_worked)):
                     print("Please input a valid number")
                 else:
-                    if (float(new_time_worked)):
-                        user.add_time_worked(float(new_time_worked))
-                    else:
-                        user.add_time_worked(int(new_time_worked))
+                    user.add_time_worked(float(new_time_worked))
+                    dict[user.get_name()][8] = new_time_worked
                     break
         elif (str(which_info).lower() == 'i'): 
             while True:
                 if (str(user.employee_contractor).lower() == "employee"):
-                    new_salary = input("Set " + str(user.get_name()) + "'s salary: ")
+                    new_salary = input("Set " + str(user.get_name()) + "'s salary (currently : " + \
+                        str(user.get_salary()) + "): ")
                     if (str(new_salary).lower() == 'q'):
                         print("Quitting Program")
                         quit()
                     elif (not is_number(new_salary)):
                         print("Please input a valid number")
                     else:
-                        user.set_salary(new_salary)
+                        user.set_salary(float(new_salary))
+                        dict[user.get_name()][9] = new_salary
                         break
                 else:
-                    new_rate = input("Set " + str(user.get_name()) + "'s rate per hour: ")
+                    new_rate = input("Set " + str(user.get_name()) + "'s rate per hour (currently : " + \
+                        str(user.get_rate()) + "): ")
                     if (str(new_rate).lower() == 'q'):
                         print("Quitting Program")
                         quit()
                     elif (not is_number(new_rate)):
                         print("Please input a valid number")
                     else:
-                        user.set_rate_per_hour(new_rate)
+                        user.set_rate_per_hour(float(new_rate))
+                        dict[user.get_name()][10] = new_rate
                         break
         elif (str(which_info).lower() == 'j'): 
             while True:
                 if (str(user.employee_contractor).lower() == "employee"):
-                    salary_raise = input("Give " + str(user.get_name()) + " a salary raise by %: ")
+                    salary_raise = input("Give " + str(user.get_name()) + " a salary raise by what %: ")
                     if (str(salary_raise).lower() == 'q'):
                         print("Quitting Program")
                         quit()
                     elif (not is_number(salary_raise)):
                         print("Please input a valid number")
                     else:
-                        if (float(salary_raise)):
-                            user.salary_raise(float(salary_raise))
-                        else:
-                            user.salary_raise(int(salary_raise))
+                        user.salary_raise(float(salary_raise))
                         break
                 else:
                     rate_raise = input("Give " + str(user.get_name()) + " a rate raise by $: ")
@@ -452,26 +487,20 @@ def edit_info(emp_name):
                     elif (not is_number(rate_raise)):
                         print("Please input a valid number")
                     else:
-                        if (float(rate_raise)):
-                            user.rate_raise(float(rate_raise))
-                        else:
-                            user.rate_raise(int(rate_raise))
+                        user.rate_raise(float(rate_raise))
                         break
         
         elif (str(which_info).lower() == 'k'): 
             while True:
                 if (str(user.employee_contractor).lower() == "employee"):
-                    salary_cut = input("Give " + str(user.get_name()) + " a salary cut by %: ")
+                    salary_cut = input("Give " + str(user.get_name()) + " a salary cut by what %: ")
                     if (str(salary_cut).lower() == 'q'):
                         print("Quitting Program")
                         quit()
                     elif (not is_number(salary_cut)):
                         print("Please input a valid number")
                     else:
-                        if (float(salary_cut)):
-                            user.salary_cut(float(salary_cut))
-                        else:
-                            user.salary_cut(int(salary_cut))
+                        user.salary_cut(float(salary_cut))
                         break
                 else:
                     rate_cut = input("Give " + str(user.get_name()) + " a rate cut by $: ")
@@ -481,10 +510,7 @@ def edit_info(emp_name):
                     elif (not is_number(rate_cut)):
                         print("Please input a valid number")
                     else:
-                        if (float(rate_cut)):
-                            user.rate_cut(float(rate_cut))
-                        else:
-                            user.rate_cut(int(rate_cut))
+                        user.rate_cut(float(rate_cut))
                         break
 
 
