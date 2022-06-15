@@ -513,52 +513,54 @@ def edit_info(emp_name):
                         user.rate_cut(float(rate_cut))
                         break
 
-
-while True:
-    print("\nWhat would you like to do?")
-    user = input("Get Info About Employee (Get) \nEdit Info About Employee (Edit) \
-        \nAdd Employee (Add) \nRemove Employee (Remove) \nBack (Back) \nQuit (Q) \n: ")
-    if (str(user).lower() == 'q'):
-        quit()
-    elif (str(user).lower() == "back"):
-        quit()
-    elif (str(user).lower() == "get"):
-        if (names == []):
-            print("There are no employees to get")
-        else: 
-            while True:
-                emp_name = input("\nWhich employee would you like to get information about? \n" + str(names) + \
-                    "\nBack (Back) \nQuit (Q) \n: ")
-                if (str(emp_name).lower() == 'q'):
-                    quit()
-                elif (str(emp_name).lower() == "back"):
-                    break 
-                elif (emp_name not in names):
-                    print("This is not a valid employee name")
-                else:
-                    get_info(emp_name)
-    elif (str(user).lower() == "edit"):
-        if (names == []):
-            print("There are no employees to edit")
+def main():
+    while True:
+        print("\nWhat would you like to do?")
+        user = input("Get Info About Employee (Get) \nEdit Info About Employee (Edit) \
+            \nAdd Employee (Add) \nRemove Employee (Remove) \nBack (Back) \nQuit (Q) \n: ")
+        if (str(user).lower() == 'q'):
+            quit()
+        elif (str(user).lower() == "back"):
+            quit()
+        elif (str(user).lower() == "get"):
+            if (names == []):
+                print("There are no employees to get")
+            else: 
+                while True:
+                    emp_name = input("\nWhich employee would you like to get information about? \n" + str(names) + \
+                        "\nBack (Back) \nQuit (Q) \n: ")
+                    if (str(emp_name).lower() == 'q'):
+                        quit()
+                    elif (str(emp_name).lower() == "back"):
+                        break 
+                    elif (emp_name not in names):
+                        print("This is not a valid employee name")
+                    else:
+                        get_info(emp_name)
+        elif (str(user).lower() == "edit"):
+            if (names == []):
+                print("There are no employees to edit")
+            else:
+                while True:
+                    emp_name = input("\nWhose information would you like to edit? \n" + str(names) + \
+                        "\nBack (Back) \nQuit (Q) \n: ")
+                    if (str(emp_name).lower() == 'q'):
+                        quit()
+                    elif (str(emp_name).lower() == "back"):
+                        break
+                    elif (emp_name not in names):
+                        print("This is not a valid employee name")
+                    else:
+                        edit_info(emp_name)
+        elif (str(user).lower() == "add"):
+            add_employee()
+        elif (str(user).lower() == "remove"):
+            if names == []: 
+                print("There are no employees to remove")
+            else:
+                remove_employee()
         else:
-            while True:
-                emp_name = input("\nWhose information would you like to edit? \n" + str(names) + \
-                    "\nBack (Back) \nQuit (Q) \n: ")
-                if (str(emp_name).lower() == 'q'):
-                    quit()
-                elif (str(emp_name).lower() == "back"):
-                    break
-                elif (emp_name not in names):
-                    print("This is not a valid employee name")
-                else:
-                    edit_info(emp_name)
-    elif (str(user).lower() == "add"):
-        add_employee()
-    elif (str(user).lower() == "remove"):
-        if names == []: 
-            print("There are no employees to remove")
-        else:
-            remove_employee()
-    else:
-        print("Please input a valid command")
+            print("Please input a valid command")
 
+if __name__ == "__main__":
+    main()
